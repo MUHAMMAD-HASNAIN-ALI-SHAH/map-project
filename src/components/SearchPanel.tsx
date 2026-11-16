@@ -1,13 +1,11 @@
-
 import { useState, useRef } from "react";
-import type { SearchResult, LocationPoint } from "../../types/index.ts";
-import useMapStore from "../../store/useMapStore.tsx";
-import { searchLocation } from "../../services/locationService.ts";
+import type { SearchResult, LocationPoint } from "../types/index.ts";
+import useMapStore from "../store/useMapStore.tsx";
+import { searchLocation } from "../services/locationService.ts";
 
 const SearchPanel = () => {
     const { setPannelScreen, setSearchPoint, searchPointSelected, setSearchPointSelected } =
         useMapStore();
-
 
     const [search, setSearch] = useState({
         query: "",
@@ -91,7 +89,7 @@ const SearchPanel = () => {
     }
 
     return (
-        <div className="absolute left-10 top-6 z-1000 w-95 rounded-2xl bg-white shadow-md">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-6 sm:translate-x-0 sm:left-10 z-1000 w-80 sm:w-95 rounded-2xl bg-white shadow-md">
 
             {/* Search Bar */}
             <div className="flex items-center gap-3 px-6 py-4">
@@ -177,7 +175,7 @@ const SearchPanel = () => {
                 )}
 
                 {searchPointSelected && <button
-                    onClick={() => setPannelScreen("route")}
+                    onClick={() => {setPannelScreen("route")}}
                     title="Switch to route view"
                     style={{ color: "#475569" }}
                     className="rotate-30 text-slate-600 hover:text-slate-600"

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet/hooks";
-import type { LocationPoint } from "../../types/index.ts";
-import useMapStore from "../../store/useMapStore.tsx";
+import type { LocationPoint } from "../types/index.ts";
+import useMapStore from "../store/useMapStore.tsx";
 
+// Custom zoom controls for the map
 export function CustomZoomControls() {
     const map = useMap();
-
     const [zoom, setZoom] = useState(map.getZoom());
 
     useEffect(() => {
@@ -50,12 +50,12 @@ export function CustomZoomControls() {
     );
 }
 
+// Navigation button to open the route panel
 export function NavigationBarButton() {
-    const { setPannelScreen } = useMapStore();
     return (
         <button
             title="My current location"
-            onClick={() => setPannelScreen("route")}
+            onClick={() => useMapStore.getState().setPannelScreen("route")}
             className="absolute rotate-30 bottom-24 right-4 z-1000 flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-600 shadow-lg transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
             <svg
@@ -76,22 +76,29 @@ export function NavigationBarButton() {
     );
 }
 
-interface CurrentLocationButtonProps {
-    currentLocation: [number, number] | null;
-    startTracking: () => void;
-}
-
+// Button to go to the user's current location
 export function CurrentLocationButton({
     startTracking,
     currentLocation,
-}: CurrentLocationButtonProps) {
+}: {
+    currentLocation: [number, number] | null;
+    startTracking: () => void;
+}) {
     const map = useMap();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (currentLocation) {
+            setIsLoading(false);
+        }
+    }, [currentLocation]);
 
     function goToCurrentLocation() {
         if (!currentLocation) {
+            setIsLoading(true);
             startTracking();
             return;
-        };
+        }
 
         map.flyTo(currentLocation, 17, {
             animate: true,
@@ -102,32 +109,57 @@ export function CurrentLocationButton({
     return (
         <button
             onClick={goToCurrentLocation}
+            disabled={isLoading}
             title="My current location"
-            className="absolute bottom-6 right-4 z-1000 flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-600 shadow-lg transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="absolute bottom-6 right-4 z-1000 flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-600 shadow-lg transition hover:bg-blue-50 disabled:cursor-wait disabled:opacity-70"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="25"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ transform: "rotate(45deg)" }}
-            >
-                <circle cx="12" cy="12" r="3" />
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 2v2" />
-                <path d="M12 20v2" />
-                <path d="M2 12h2" />
-                <path d="M20 12h2" />
-            </svg>
+            {isLoading ? (
+                <svg
+                    className="h-6 w-6 animate-spin text-slate-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                    />
+                    <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                </svg>
+            ) : (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ transform: "rotate(45deg)" }}
+                >
+                    <circle cx="12" cy="12" r="3" />
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 2v2" />
+                    <path d="M12 20v2" />
+                    <path d="M2 12h2" />
+                    <path d="M20 12h2" />
+                </svg>
+            )}
         </button>
     );
 }
 
+// Component to handle searching for a location and flying to it on the map
 export function SearchLocationController({
     searchPoint,
     searchPointSelected,
@@ -164,6 +196,7 @@ export function SearchLocationController({
     return null;
 }
 
+// Component to track the user's current location and fly to it on the map when the route has started
 export function TrackCurrentLocation({
     currentLocation,
     routeStarted,
@@ -185,6 +218,7 @@ export function TrackCurrentLocation({
     return null;
 }
 
+// Component to handle GPS navigation and rotate the map based on the user's heading
 export function GPSNavigationController({
     location,
     heading,

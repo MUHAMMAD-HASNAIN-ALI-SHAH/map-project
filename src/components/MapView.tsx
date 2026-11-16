@@ -5,7 +5,7 @@ import {
     Popup,
     Polyline,
 } from "react-leaflet";
-import { gpsIcon, } from "../../utils/mapIcons.ts";
+import { gpsIcon, } from "../utils/mapIcons.ts";
 import {
     CurrentLocationButton,
     CustomZoomControls,
@@ -14,14 +14,15 @@ import {
     SearchLocationController,
     TrackCurrentLocation,
 } from "./MapControls.tsx";
-import SidePannel from "../SidePannel.tsx";
-import useMapStore from "../../store/useMapStore.tsx";
+import SidePannel from "./SidePannel.tsx";
+import useMapStore from "../store/useMapStore.tsx";
 
-
-
-
-
-type Props = {
+export default function MapView({
+    currentLocation,
+    heading,
+    startTracking,
+    gps,
+}: {
     currentLocation: [number, number] | null;
     heading: number | null;
     startTracking: () => void;
@@ -32,14 +33,7 @@ type Props = {
         startTracking: () => void;
         stopTracking: () => void;
     }
-};
-
-export default function MapView({
-    currentLocation,
-    heading,
-    startTracking,
-    gps,
-}: Props) {
+}) {
     const { searchPoint, searchPointSelected, routeData, routeStarted } = useMapStore();
 
     return (
@@ -58,6 +52,7 @@ export default function MapView({
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
+                {/* Current Location Marker */}
                 {
                     routeStarted && (
                         <TrackCurrentLocation
@@ -68,20 +63,27 @@ export default function MapView({
 
                 }
 
+                {/* Search Location Marker */}
                 <GPSNavigationController
                     location={currentLocation}
                     heading={heading}
                 />
 
-                <CustomZoomControls />
+                <div className="flex flex-col gap-2 mb-10">
+                    {/* Custom Zoom Controls */}
+                    <CustomZoomControls />
 
-                <CurrentLocationButton
-                    startTracking={startTracking}
-                    currentLocation={currentLocation}
-                />
+                    {/* Navigation Button */}
+                    <NavigationBarButton />
 
-                <NavigationBarButton />
+                    {/* Current Location Button */}
+                    <CurrentLocationButton
+                        startTracking={startTracking}
+                        currentLocation={currentLocation}
+                    />
+                </div>
 
+                {/* GPS Marker */}
                 {currentLocation && (
                     <Marker position={currentLocation} icon={gpsIcon}>
                         <Popup>
@@ -98,6 +100,7 @@ export default function MapView({
                     searchPointSelected={searchPointSelected}
                 />
 
+                {/* Search Location Popup */}
                 {searchPointSelected && searchPoint && (
                     <Marker
                         position={[searchPoint.lat, searchPoint.lon]}
@@ -108,6 +111,7 @@ export default function MapView({
                     </Marker>
                 )}
 
+                {/* Route Polyline */}
                 {routeData && (
                     <Polyline
                         positions={routeData.coordinates}

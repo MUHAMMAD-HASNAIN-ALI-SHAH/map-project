@@ -1,6 +1,6 @@
-import SearchPanel from "./pannels/SearchPanel";
+import SearchPanel from "./SearchPanel";
 import useMapStore from "../store/useMapStore";
-import RoutePannel from "./pannels/RoutePannel";
+import RoutePannel from "./RoutePannel";
 
 const SidePannel = ({ gps }: {
     gps: {
@@ -11,11 +11,10 @@ const SidePannel = ({ gps }: {
         stopTracking: () => void;
     }
 }) => {
-    const { pannelScreen } = useMapStore();
     return (
         <>
-            {pannelScreen === "search" && <SearchPanel />}
-            {pannelScreen === "route" && <RoutePannel gps={gps} />}
+            {useMapStore.getState().pannelScreen === "search" && <SearchPanel />}
+            {useMapStore.getState().pannelScreen === "route" && <RoutePannel gps={gps} />}
         </>
     )
 }

@@ -12,7 +12,6 @@ import {
     GPSNavigationController,
     NavigationBarButton,
     SearchLocationController,
-    TrackCurrentLocation,
 } from "./MapControls.tsx";
 import SidePannel from "./SidePannel.tsx";
 import useMapStore from "../store/useMapStore.tsx";
@@ -34,7 +33,7 @@ export default function MapView({
         stopTracking: () => void;
     }
 }) {
-    const { searchPoint, searchPointSelected, routeData, routeStarted } = useMapStore();
+    const { searchPoint, searchPointSelected, routeData } = useMapStore();
 
     return (
         <main className="relative min-h-0 flex-1">

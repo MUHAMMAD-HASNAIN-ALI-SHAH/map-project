@@ -48,20 +48,9 @@ export default function MapView({
                 touchRotate={true}
             >
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">MHAS Ride</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
-                {/* Current Location Marker */}
-                {
-                    routeStarted && (
-                        <TrackCurrentLocation
-                            currentLocation={currentLocation}
-                            routeStarted={routeStarted}
-                        />
-                    )
-
-                }
 
                 {/* Search Location Marker */}
                 <GPSNavigationController

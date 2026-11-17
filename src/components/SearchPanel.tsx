@@ -4,7 +4,7 @@ import useMapStore from "../store/useMapStore.tsx";
 import { searchLocation } from "../services/locationService.ts";
 
 const SearchPanel = () => {
-    const { setPannelScreen, setSearchPoint, searchPointSelected, setSearchPointSelected } =
+    const { setSearchPoint, searchPointSelected, setSearchPointSelected } =
         useMapStore();
 
     const [search, setSearch] = useState({
@@ -173,27 +173,6 @@ const SearchPanel = () => {
                         </svg>
                     </button>
                 )}
-
-                {searchPointSelected && <button
-                    onClick={() => {setPannelScreen("route")}}
-                    title="Switch to route view"
-                    style={{ color: "#475569" }}
-                    className="rotate-30 text-slate-600 hover:text-slate-600"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="23"
-                        height="23"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#475569"
-                        strokeWidth="1.5"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 2.5L19.2 21.5L12 17.2L4.8 21.5Z" />
-                        <path d="M12 2.5L12 17.2L4.8 21.5Z" />
-                    </svg>
-                </button>}
             </div>
 
             {/* Search Results */}

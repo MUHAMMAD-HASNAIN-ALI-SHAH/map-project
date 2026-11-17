@@ -47,7 +47,7 @@ export default function MapView({
                 touchRotate={true}
             >
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">MHAS Ride</a>'
+                    attribution='&copy; <a href="https://mhas-map-mu.vercel.app/">MHAS Ride</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
